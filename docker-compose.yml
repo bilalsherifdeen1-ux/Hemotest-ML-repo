@@ -1,0 +1,29 @@
+version: "3.9"
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./models:/app/models
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD","python","-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  notebook:
+    build: .
+    ports:
+      - "8888:8888"
+    command: jupyter notebook --ip=0.0.0.0 --no-browser --allow-root --NotebookApp.token=''
+    volumes:
+      - ./notebooks:/app/notebooks
+      - ./data:/app/data
+      - ./models:/app/models
+    restart: unless-stopped

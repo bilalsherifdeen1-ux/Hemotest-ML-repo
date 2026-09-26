@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: System deps (OpenCV)
+        run: sudo apt-get update && sudo apt-get install -y libgl1-mesa-glx libglib2.0-0
+
+      - name: Install
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+          pip install -e .
+
+      - name: Lint
+        run: ruff check src/ api/ tests/ scripts/
+
+      - name: Type check
+        run: mypy src/hemotest/ --ignore-missing-imports
+
+      - name: Generate data + train
+        run: |
+          python scripts/generate_data.py --n-samples 300
+          python scripts/train.py --data data/processed/ --output models/
+
+      - name: Tests
+        run: pytest tests/ -v --cov=src/hemotest --cov-report=xml
+
+      - name: SAFETY CHECK — zero severe false negatives
+        run: pytest tests/test_models.py::TestClinicalSafety::test_zero_severe_false_negatives -v
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          file: coverage.xml
+          fail_ci_if_error: false
