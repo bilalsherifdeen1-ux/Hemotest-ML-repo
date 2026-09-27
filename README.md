@@ -152,6 +152,16 @@ Severe anaemia (Hb < 7.0 g/dL) false negatives: **0**
 
 ---
 
+## Engineering write-up
+
+Read the full technical case study: **[Building HemoTest ML](docs/engineering-writeup.md)**.
+
+It documents the measurement physics, 19-feature pipeline, model-training strategy,
+safety-aware severe-anaemia guardrail, API boundary, verification approach, and the
+validation work still required before clinical deployment.
+
+---
+
 ## References
 
 1. WHO (2024). Guideline on haemoglobin cutoffs to define anaemia. Geneva: WHO.

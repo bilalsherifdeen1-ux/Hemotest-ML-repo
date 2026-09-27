@@ -7,8 +7,8 @@ Founder: Sherifdeen Bilal Olamilekan | UDUS, Sokoto, Nigeria
 ## Model details
 - Type: Stacking ensemble (XGBoost + RF + GBM + Linear, Ridge meta-learner)
 - Task: Regression — haemoglobin (g/dL) from 19 colorimetric features
-- Framework: scikit-learn 1.4.1 + XGBoost 2.0.3
-- Version: 1.0.0 | Date: January 2026
+- Framework: scikit-learn 1.4.2 + XGBoost 2.0.3
+- Version: 1.0.0 | Date: September 2026
 
 ## Intended use
 Point-of-care anaemia screening at PHCs in Nigeria.
